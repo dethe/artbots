@@ -17,7 +17,7 @@ for (var i = 0; i < SLICES; i++){
     buffer.push(c);
 }
 
-function async startCamera(){
+async function startCamera(){
     var stream = await navigator.mediaDevices.getMedia({video:true});
     video.src = URL.createObjectURL(stream);
     video.play();
