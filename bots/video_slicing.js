@@ -18,7 +18,7 @@ for (var i = 0; i < SLICES; i++){
 }
 
 async function startCamera(){
-    var stream = await navigator.mediaDevices.getMedia({video:true});
+    var stream = await navigator.mediaDevices.getUserMedia({video:true});
     video.src = URL.createObjectURL(stream);
     video.play();
     VIDEO_SLICE_WIDTH = video.width / SLICES;
