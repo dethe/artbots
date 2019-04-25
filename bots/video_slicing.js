@@ -4,14 +4,6 @@ canvas.setAttribute('width', window.innerWidth);
 canvas.setAttribute('height', window.innerHeight);
 video.setAttribute('width', window.innerWidth);
 video.setAttribute('height', window.innerHeight);
-navigator.getMedia = ( navigator.getUserMedia ||
-               navigator.webkitGetUserMedia ||
-               navigator.mozGetUserMedia ||
-               navigator.msGetUserMedia);
-var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-     window.requestAnimationFrame = requestAnimationFrame;
-
 var SLICES = 64;
 var CANVAS_SLICE_WIDTH = window.innerWidth / SLICES;
 var CANVAS_HEIGHT = window.innerHeight;
@@ -25,22 +17,15 @@ for (var i = 0; i < SLICES; i++){
     buffer.push(c);
 }
 
-function startCamera(){
-    var videoStream = navigator.getMedia({video:true}, function(stream) {
-        if (navigator.mozGetUserMedia) {
-            video.mozSrcObject = stream;
-        } else {
-            var vendorURL = window.URL || window.webkitURL;
-            video.src = vendorURL.createObjectURL(stream);
-        }
-        video.play();
-        VIDEO_SLICE_WIDTH = video.width / SLICES;
-        VIDEO_HEIGHT = video.height;
-        drawFrame();
-    },function(err){
-        console.log('an error occurred: %o', err);
-    });
+function async startCamera(){
+    var stream = await navigator.mediaDevices.getMedia({video:true});
+    video.src = URL.createObjectURL(stream);
+    video.play();
+    VIDEO_SLICE_WIDTH = video.width / SLICES;
+    VIDEO_HEIGHT = video.height;
+    drawFrame();
 }
+
 function drawFrame(){
     requestAnimationFrame(drawFrame);
     buffer.unshift(buffer.pop()); // move last frame to first
